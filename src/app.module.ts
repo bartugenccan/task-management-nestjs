@@ -13,17 +13,25 @@ import { AuthModule } from './auth/auth.module';
 import { Task } from './tasks/task.entity';
 import { User } from './auth/user.entity';
 
+// Config
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
 @Module({
-  imports: [TasksModule, AuthModule, TypeOrmModule.forRoot({
-    type: 'postgres',
-    host: 'localhost',
-    port: 49491,
-    username: 'postgres',
-    password: 'postgres',
-    database: 'task-management',
-    autoLoadEntities: true,
-    synchronize: true,
-    entities: [Task, User],
+  imports: [TasksModule, AuthModule, ConfigModule.forRoot({
+    envFilePath: '.env',
+  }), TypeOrmModule.forRootAsync({
+    imports: [ConfigModule],
+    inject: [ConfigService],
+    useFactory: async (config: ConfigService) => ({
+      type: 'postgres',
+      host: config.get('DB_HOST'),
+      port: config.get('DB_PORT'),
+      username: config.get('DB_USERNAME'),
+      password: config.get('DB_PASSWORD'),
+      database: config.get('DB_DATABASE'),
+      entities: [Task, User],
+      synchronize: true,
+    }),
   })],
   controllers: [AppController],
   providers: [AppService],

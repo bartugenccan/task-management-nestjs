@@ -11,9 +11,14 @@ import { TasksService } from './tasks.service';
 
 // DTOS
 import { CreateTaskDto, GetTasksFilterDto } from './dtos';
-import { AuthGuard } from '@nestjs/passport';
-import { GetUser } from 'src/auth/decorators/get-user.decorator';
 import { User } from 'src/auth/user.entity';
+
+// Guards
+import { AuthGuard } from '@nestjs/passport';
+
+// Decorators
+import { GetUser } from 'src/auth/decorators/get-user.decorator';
+
 
 
 @Controller('tasks')
